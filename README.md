@@ -1,8 +1,8 @@
-# ClickCmds - One-Click Terminal Commands for VS Code
+# CickCMD - One-Click Terminal Commands for VS Code
 
-**Tired of remembering and typing long, complex commands for your team projects?** ClickCmds is a VS Code extension that provides a GUI to run predefined terminal commands with a single click. Configure your project's common routines in a single file, ensuring consistency and saving valuable time for every member of your team. Perfect for projects with numerous command-line tasks.
+**Tired of remembering and typing long, complex commands for your team projects?** CickCMD is a VS Code extension that provides a GUI to run predefined terminal commands with a single click. Configure your project's common routines in a single file, ensuring consistency and saving valuable time for every member of your team. Perfect for projects with numerous command-line tasks.
 
-![ClickCmds Demo](https://via.placeholder.com/600x400/1e1e1e/ffffff?text=ClickCmds+Extension+Demo)
+![CickCMD Demo](https://via.placeholder.com/600x400/1e1e1e/ffffff?text=CickCMD+Extension+Demo)
 
 ## ✨ Features
 
@@ -20,7 +20,7 @@
 2. **Open a workspace** in VS Code
 3. **Create a `.cmmds` file** in your workspace root (or let the extension create one for you)
 4. **Configure your commands** in YAML format
-5. **Open the ClickCmds panel** in the sidebar and start clicking!
+5. **Open the CickCMD panel** in the sidebar and start clicking!
 
 ## 📝 Configuration
 
@@ -59,8 +59,8 @@ temporary:
 - **🧹 Clear Temp**: Remove all temporary overrides
 
 ### Available Commands
-- `ClickCmds: Open .cmmds` - Open the configuration file
-- `ClickCmds: Refresh` - Reload the commands panel
+- `CickCMD: Open .cmmds` - Open the configuration file
+- `CickCMD: Refresh` - Reload the commands panel
 
 ## 🛠️ Configuration Options
 
@@ -114,8 +114,8 @@ Want to contribute or run the extension locally?
 ### Setup
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/clickcmds-vscode.git
-cd clickcmds-vscode
+git clone https://github.com/yourusername/cickcmd-vscode.git
+cd cickcmd-vscode
 
 # Install dependencies
 npm install
@@ -127,7 +127,7 @@ code .
 ### Running
 1. Press `F5` to launch the Extension Development Host
 2. Open a workspace with a `.cmmds` file
-3. The ClickCmds panel should appear in the sidebar
+3. The CickCMD panel should appear in the sidebar
 
 ### Building
 ```bash
@@ -142,7 +142,7 @@ npm run package
 
 We welcome contributions! Here's how you can help:
 
-1. **🐛 Report Issues**: Found a bug? [Open an issue](https://github.com/yourusername/clickcmds-vscode/issues)
+1. **🐛 Report Issues**: Found a bug? [Open an issue](https://github.com/yourusername/cickcmd-vscode/issues)
 2. **💡 Suggest Features**: Have an idea? We'd love to hear it!
 3. **🔧 Submit PRs**: Fork, branch, code, and create a pull request
 4. **📖 Improve Docs**: Help us make the documentation better
@@ -160,12 +160,12 @@ This extension is **dual-licensed** to provide flexibility for different use cas
 **📋 License Options:**
 - ✅ **Non-Commercial License**: Free for personal, educational, and non-commercial use
 - 💼 **Commercial License**: Required for commercial use, distribution, or monetization
-- 🛡️ **Trademark Protection**: "ClickCmds" name and branding are protected
+- 🛡️ **Trademark Protection**: "CickCMD" name and branding are protected
 
 **🎯 What this means:**
 - Personal/educational use → **Free** (Non-Commercial License)
 - Commercial use/selling → **Contact for Commercial License**
-- Fork with different name → **Free** (but can't use "ClickCmds" trademark)
+- Fork with different name → **Free** (but can't use "CickCMD" trademark)
 
 Contributors should note that all contributions are voluntary and made under the project's dual license structure.
 
@@ -176,7 +176,7 @@ This project is **dual-licensed**:
 1. **Non-Commercial License** - Free for personal and educational use
 2. **Commercial License** - Required for commercial use and distribution
 
-The **"ClickCmds" trademark** is separately protected regardless of license choice.
+The **"CickCMD" trademark** is separately protected regardless of license choice.
 
 See the [LICENSE](LICENSE) file for complete terms, or contact us for commercial licensing inquiries.
 
@@ -190,6 +190,6 @@ See the [LICENSE](LICENSE) file for complete terms, or contact us for commercial
 
 **⭐ If this extension helps you, please consider giving it a star on GitHub!**
 
-**🐛 Found an issue?** [Report it here](https://github.com/yourusername/clickcmds-vscode/issues)
+**🐛 Found an issue?** [Report it here](https://github.com/yourusername/cickcmd-vscode/issues)
 
-**💬 Have questions?** [Start a discussion](https://github.com/yourusername/clickcmds-vscode/discussions)
+**💬 Have questions?** [Start a discussion](https://github.com/yourusername/cickcmd-vscode/discussions)
