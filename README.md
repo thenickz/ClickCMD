@@ -159,6 +159,7 @@ We welcome contributions! Here's how you can help:
 This extension is **dual-licensed** to provide flexibility for different use cases while protecting commercial rights. Choose the license that best fits your needs:
 
 **TL;DR:** User can do whatever they want, just don't sell it!
+
 **📋 License Options:**
 - ✅ **Non-Commercial License**: Free for personal, educational, and non-commercial use
 - 💼 **Commercial License**: Required for commercial use, distribution, or monetization
