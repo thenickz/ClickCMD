@@ -1,3 +1,4 @@
+# Pre-Alpha
 # CickCMD - One-Click Terminal Commands for VS Code
 
 **Tired of remembering and typing long, complex commands for your team projects?** CickCMD is a VS Code extension that provides a GUI to run predefined terminal commands with a single click. Configure your project's common routines in a single file, ensuring consistency and saving valuable time for every member of your team. Perfect for projects with numerous command-line tasks.
@@ -157,6 +158,7 @@ We welcome contributions! Here's how you can help:
 
 This extension is **dual-licensed** to provide flexibility for different use cases while protecting commercial rights. Choose the license that best fits your needs:
 
+**TL;DR:** User can do whatever they want, just don't sell it!
 **📋 License Options:**
 - ✅ **Non-Commercial License**: Free for personal, educational, and non-commercial use
 - 💼 **Commercial License**: Required for commercial use, distribution, or monetization
