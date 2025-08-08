@@ -12,12 +12,17 @@ export function activate(context: vscode.ExtensionContext): void {
 		const configManager = new ConfigManager(logger);
 		const viewProvider = new ClickCmdsViewProvider(context, configManager, logger);
 
-		// Registrar WebviewViewProvider
+		logger.info('Registrando WebviewViewProvider...');
+		
+		// Registrar WebviewViewProvider diretamente (sem delay)
 		const webviewDisposable = vscode.window.registerWebviewViewProvider(
 			ClickCmdsViewProvider.viewType, 
 			viewProvider, 
 			{ webviewOptions: { retainContextWhenHidden: true } }
 		);
+		
+		context.subscriptions.push(webviewDisposable);
+		logger.info(`WebviewViewProvider registrado para tipo: ${ClickCmdsViewProvider.viewType}`);
 
 		// Registrar comandos
 		const commands = [
@@ -29,7 +34,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			vscode.commands.registerCommand('clickcmds.clearTemporary', () => configManager.clearTemporary())
 		];
 
-		context.subscriptions.push(webviewDisposable, ...commands, outputChannel);
+		context.subscriptions.push(...commands, outputChannel);
 		logger.info('ClickCmds ativado com sucesso');
 	} catch (error) {
 		logger.error('Falha ao ativar ClickCmds:', error);
@@ -247,6 +252,8 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 	) {}
 
 	resolveWebviewView(webviewView: vscode.WebviewView): void {
+		this.logger.info('resolveWebviewView chamado - inicializando view');
+		
 		this.view = webviewView;
 		const webview = webviewView.webview;
 		
@@ -255,9 +262,11 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 			localResourceRoots: [this.context.extensionUri] 
 		};
 
+		this.logger.info('Atualizando conteúdo do webview...');
 		this.updateWebviewContent();
 
 		webview.onDidReceiveMessage(async (message: WebviewMessage) => {
+			this.logger.debug(`Received message: ${message.type}`);
 			try {
 				await this.handleMessage(message);
 			} catch (error) {
@@ -266,7 +275,10 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 			}
 		});
 
+		this.logger.info('Configurando file watcher...');
 		this.setupFileWatcher();
+		
+		this.logger.info('resolveWebviewView concluído');
 	}
 
 	private async handleMessage(message: WebviewMessage): Promise<void> {
@@ -317,13 +329,27 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 			return;
 		}
 
-		this.watcher = vscode.workspace.createFileSystemWatcher(
-			new vscode.RelativePattern(workspaceFolder, '.cmmds')
-		);
+		// Usar padrão absoluto para evitar warnings de resource scoped configuration
+		const pattern = new vscode.RelativePattern(workspaceFolder, '.cmmds');
+		this.watcher = vscode.workspace.createFileSystemWatcher(pattern, false, false, false);
 
-		this.watcher.onDidChange(() => this.refresh());
-		this.watcher.onDidCreate(() => this.refresh());
-		this.watcher.onDidDelete(() => this.refresh());
+		this.watcher.onDidChange(() => {
+			this.logger.debug('Config file changed, refreshing view');
+			this.refresh();
+		});
+		this.watcher.onDidCreate(() => {
+			this.logger.debug('Config file created, refreshing view');
+			this.refresh();
+		});
+		this.watcher.onDidDelete(() => {
+			this.logger.debug('Config file deleted, refreshing view');
+			this.refresh();
+		});
+
+		// Adicionar o watcher aos subscriptions para cleanup
+		if (this.context) {
+			this.context.subscriptions.push(this.watcher);
+		}
 	}
 
 	async refresh(): Promise<void> {
@@ -331,16 +357,32 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 	}
 
 	private async updateWebviewContent(): Promise<void> {
+		this.logger.debug('updateWebviewContent iniciado');
+		
 		if (!this.view) {
+			this.logger.error('updateWebviewContent: view não está definida');
 			return;
 		}
 
 		try {
+			this.logger.debug('Garantindo config sample...');
 			await this.configManager.ensureSampleConfig();
+			
+			this.logger.debug('Lendo configuração...');
 			const config = await this.configManager.readConfig();
+			
+			this.logger.debug('Calculando configuração efetiva...');
 			const effective = this.configManager.getEffectiveConfig(config);
 
-			this.view.webview.html = this.generateWebviewContent(config, effective);
+			this.logger.info(`Comandos encontrados: ${Object.keys(effective.commands).length}`);
+			
+			this.logger.debug('Gerando HTML do webview...');
+			const html = this.generateWebviewContent(config, effective);
+			
+			this.logger.debug(`HTML gerado com ${html.length} caracteres`);
+			this.view.webview.html = html;
+			
+			this.logger.info('Conteúdo do webview atualizado com sucesso');
 		} catch (error) {
 			this.logger.error('Failed to update webview content:', error);
 			this.view.webview.html = this.generateErrorContent();
