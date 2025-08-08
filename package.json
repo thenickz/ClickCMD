@@ -25,7 +25,9 @@
       "clickcmds": [
         {
           "id": "clickcmds.view",
-          "name": "ClickCmds"
+          "name": "ClickCmds",
+          "type": "webview",
+          "icon": "$(terminal)"
         }
       ]
     },
