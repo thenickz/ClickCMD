@@ -1,0 +1,84 @@
+{
+  "name": "clickcmds",
+  "displayName": "ClickCmds — Botões para Comandos",
+  "description": "Webview com botões para comandos definidos em .cmmds (YAML), com overrides temporários e execução no terminal atual ou dedicado.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "clickcmds",
+          "title": "ClickCmds",
+          "icon": "media/clickcmds.svg"
+        }
+      ]
+    },
+    "views": {
+      "clickcmds": [
+        {
+          "id": "clickcmds.view",
+          "name": "ClickCmds"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "clickcmds.openConfig",
+        "title": "ClickCmds: Abrir .cmmds"
+      },
+      {
+        "command": "clickcmds.refresh",
+        "title": "ClickCmds: Recarregar"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "clickcmds.openConfig",
+          "when": "view == clickcmds.view",
+          "group": "navigation@1"
+        },
+        {
+          "command": "clickcmds.refresh",
+          "when": "view == clickcmds.view",
+          "group": "navigation@2"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "test": "vscode-test"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "1.102.0",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.9.2"
+  },
+  "license": "MIT"
+}
