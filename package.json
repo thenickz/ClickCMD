@@ -10,6 +10,7 @@
     "Other"
   ],
   "main": "./out/extension.js",
+  "activationEvents": [],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -31,11 +32,23 @@
     "commands": [
       {
         "command": "clickcmds.openConfig",
-        "title": "ClickCmds: Abrir .cmmds"
+        "title": "ClickCmds: Abrir .cmmds",
+        "icon": "$(edit)"
       },
       {
         "command": "clickcmds.refresh",
-        "title": "ClickCmds: Recarregar"
+        "title": "ClickCmds: Recarregar",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "clickcmds.focus",
+        "title": "ClickCmds: Abrir View",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "clickcmds.clearTemporary",
+        "title": "ClickCmds: Limpar Configurações Temporárias",
+        "icon": "$(clear-all)"
       }
     ],
     "menus": {
@@ -49,6 +62,18 @@
           "command": "clickcmds.refresh",
           "when": "view == clickcmds.view",
           "group": "navigation@2"
+        },
+        {
+          "command": "clickcmds.clearTemporary",
+          "when": "view == clickcmds.view",
+          "group": "navigation@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "clickcmds.focus",
+          "when": "true",
+          "group": "navigation@1"
         }
       ]
     }
