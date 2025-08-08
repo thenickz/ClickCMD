@@ -1,7 +1,7 @@
 {
-  "name": "clickcmds",
-  "displayName": "ClickCmds — Botões para Comandos",
-  "description": "Webview com botões para comandos definidos em .cmmds (YAML), com overrides temporários e execução no terminal atual ou dedicado.",
+  "name": "cickcmd",
+  "displayName": "CickCMD — Terminal Commands Panel",
+  "description": "Panel with command buttons and integrated terminal view for .cmmds (YAML) configuration files.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.102.0"
@@ -13,73 +13,90 @@
   "activationEvents": [],
   "contributes": {
     "viewsContainers": {
-      "activitybar": [
+      "panel": [
         {
-          "id": "clickcmds",
-          "title": "ClickCmds",
-          "icon": "media/clickcmds.svg"
+          "id": "cickcmd-panel",
+          "title": "CickCMD",
+          "icon": "$(terminal)"
         }
       ]
     },
     "views": {
-      "clickcmds": [
+      "cickcmd-panel": [
         {
-          "id": "clickcmds.view",
-          "name": "ClickCmds",
+          "id": "cickcmd.commands",
+          "name": "Commands",
           "type": "webview",
-          "icon": "$(terminal)"
+          "icon": "$(play)",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "cickcmd.terminal",
+          "name": "Terminal",
+          "type": "webview",
+          "icon": "$(terminal)",
+          "when": "workspaceFolderCount > 0"
         }
       ]
     },
     "commands": [
       {
-        "command": "clickcmds.openConfig",
-        "title": "ClickCmds: Abrir .cmmds",
+        "command": "cickcmd.openConfig",
+        "title": "CickCMD: Open .cmmds",
         "icon": "$(edit)"
       },
       {
-        "command": "clickcmds.refresh",
-        "title": "ClickCmds: Recarregar",
+        "command": "cickcmd.refresh",
+        "title": "CickCMD: Refresh",
         "icon": "$(refresh)"
       },
       {
-        "command": "clickcmds.focus",
-        "title": "ClickCmds: Abrir View",
-        "icon": "$(list-selection)"
+        "command": "cickcmd.openPanel",
+        "title": "CickCMD: Open Panel",
+        "icon": "$(panel-right)"
       },
       {
-        "command": "clickcmds.clearTemporary",
-        "title": "ClickCmds: Limpar Configurações Temporárias",
+        "command": "cickcmd.clearTemporary",
+        "title": "CickCMD: Clear Temporary Settings",
         "icon": "$(clear-all)"
       },
       {
-        "command": "clickcmds.runCommand",
-        "title": "ClickCmds: Executar Comando via Terminal"
+        "command": "cickcmd.runCommand",
+        "title": "CickCMD: Run Command"
+      },
+      {
+        "command": "cickcmd.createTerminal",
+        "title": "CickCMD: Create New Terminal",
+        "icon": "$(plus)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "clickcmds.openConfig",
-          "when": "view == clickcmds.view",
+          "command": "cickcmd.openConfig",
+          "when": "view == cickcmd.commands",
           "group": "navigation@1"
         },
         {
-          "command": "clickcmds.refresh",
-          "when": "view == clickcmds.view",
+          "command": "cickcmd.refresh",
+          "when": "view == cickcmd.commands",
           "group": "navigation@2"
         },
         {
-          "command": "clickcmds.clearTemporary",
-          "when": "view == clickcmds.view",
+          "command": "cickcmd.clearTemporary",
+          "when": "view == cickcmd.commands",
           "group": "navigation@3"
+        },
+        {
+          "command": "cickcmd.createTerminal",
+          "when": "view == cickcmd.terminal",
+          "group": "navigation@1"
         }
       ],
       "commandPalette": [
         {
-          "command": "clickcmds.focus",
-          "when": "true",
-          "group": "navigation@1"
+          "command": "cickcmd.openPanel",
+          "when": "workspaceFolderCount > 0"
         }
       ]
     }

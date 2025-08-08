@@ -3,65 +3,76 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 
 export function activate(context: vscode.ExtensionContext): void {
-	const outputChannel = vscode.window.createOutputChannel('ClickCmds');
+	const outputChannel = vscode.window.createOutputChannel('CickCMD');
 	const logger = new Logger(outputChannel);
 	
-	logger.info('ClickCmds ativando...');
+	logger.info('CickCMD activating...');
 
 	try {
 		const configManager = new ConfigManager(logger);
-		const viewProvider = new ClickCmdsViewProvider(context, configManager, logger);
+		const commandsViewProvider = new CommandsViewProvider(context, configManager, logger);
+		const terminalViewProvider = new TerminalViewProvider(context, logger);
 
-		logger.info('Registrando WebviewViewProvider...');
+		logger.info('Registering WebviewViewProviders...');
 		
-		// Registrar WebviewViewProvider diretamente (sem delay)
-		const webviewDisposable = vscode.window.registerWebviewViewProvider(
-			ClickCmdsViewProvider.viewType, 
-			viewProvider, 
+		// Register Commands View Provider
+		const commandsViewDisposable = vscode.window.registerWebviewViewProvider(
+			CommandsViewProvider.viewType, 
+			commandsViewProvider, 
 			{ webviewOptions: { retainContextWhenHidden: true } }
 		);
 		
-		context.subscriptions.push(webviewDisposable);
-		logger.info(`WebviewViewProvider registrado para tipo: ${ClickCmdsViewProvider.viewType}`);
+		// Register Terminal View Provider
+		const terminalViewDisposable = vscode.window.registerWebviewViewProvider(
+			TerminalViewProvider.viewType,
+			terminalViewProvider,
+			{ webviewOptions: { retainContextWhenHidden: true } }
+		);
+		
+		context.subscriptions.push(commandsViewDisposable, terminalViewDisposable);
+		logger.info('WebviewViewProviders registered successfully');
 
-		// Registrar comandos
+		// Register commands
 		const commands = [
-			vscode.commands.registerCommand('clickcmds.openConfig', () => configManager.openConfigFile()),
-			vscode.commands.registerCommand('clickcmds.refresh', () => viewProvider.refresh()),
-			vscode.commands.registerCommand('clickcmds.focus', () => 
-				vscode.commands.executeCommand('workbench.view.extension.clickcmds')
+			vscode.commands.registerCommand('cickcmd.openConfig', () => configManager.openConfigFile()),
+			vscode.commands.registerCommand('cickcmd.refresh', () => commandsViewProvider.refresh()),
+			vscode.commands.registerCommand('cickcmd.openPanel', () => 
+				vscode.commands.executeCommand('workbench.panel.cickcmd-panel.focus')
 			),
-			vscode.commands.registerCommand('clickcmds.clearTemporary', () => configManager.clearTemporary()),
-			vscode.commands.registerCommand('clickcmds.runCommand', async (commandName?: string) => {
+			vscode.commands.registerCommand('cickcmd.clearTemporary', () => configManager.clearTemporary()),
+			vscode.commands.registerCommand('cickcmd.runCommand', async (commandName?: string) => {
 				if (!commandName) {
-					// Se não passou comando, mostrar lista para escolher
+					// If no command passed, show list to choose from
 					const config = await configManager.readConfig();
 					const effective = configManager.getEffectiveConfig(config);
 					const commandNames = Object.keys(effective.commands);
 					
 					if (commandNames.length === 0) {
-						vscode.window.showWarningMessage('Nenhum comando encontrado no .cmmds');
+						vscode.window.showWarningMessage('No commands found in .cmmds');
 						return;
 					}
 					
 					const selected = await vscode.window.showQuickPick(commandNames, {
-						placeHolder: 'Selecione um comando para executar'
+						placeHolder: 'Select a command to execute'
 					});
 					
 					if (selected) {
-						await viewProvider.runCommandByName(selected);
+						await commandsViewProvider.runCommandByName(selected);
 					}
 				} else {
-					// Executar comando específico
-					await viewProvider.runCommandByName(commandName);
+					// Execute specific command
+					await commandsViewProvider.runCommandByName(commandName);
 				}
+			}),
+			vscode.commands.registerCommand('cickcmd.createTerminal', () => {
+				terminalViewProvider.createNewTerminal();
 			})
 		];
 
 		context.subscriptions.push(...commands, outputChannel);
-		logger.info('ClickCmds ativado com sucesso');
+		logger.info('CickCMD activated successfully');
 	} catch (error) {
-		logger.error('Falha ao ativar ClickCmds:', error);
+		logger.error('Failed to activate CickCMD:', error);
 	}
 }
 
@@ -264,8 +275,8 @@ class ConfigManager {
 	}
 }
 
-class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
-	public static readonly viewType = 'clickcmds.view';
+class CommandsViewProvider implements vscode.WebviewViewProvider {
+	public static readonly viewType = 'cickcmd.commands';
 	private view?: vscode.WebviewView;
 	private watcher?: vscode.FileSystemWatcher;
 
@@ -276,7 +287,7 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 	) {}
 
 	resolveWebviewView(webviewView: vscode.WebviewView): void {
-		this.logger.info('resolveWebviewView chamado - inicializando view');
+		this.logger.info('resolveWebviewView called - initializing commands view');
 		
 		this.view = webviewView;
 		const webview = webviewView.webview;
@@ -286,7 +297,7 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 			localResourceRoots: [this.context.extensionUri] 
 		};
 
-		this.logger.info('Atualizando conteúdo do webview...');
+		this.logger.info('Updating webview content...');
 		this.updateWebviewContent();
 
 		webview.onDidReceiveMessage(async (message: WebviewMessage) => {
@@ -295,14 +306,14 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 				await this.handleMessage(message);
 			} catch (error) {
 				this.logger.error('Error handling webview message:', error);
-				vscode.window.showErrorMessage('Erro ao processar comando');
+				vscode.window.showErrorMessage('Error processing command');
 			}
 		});
 
-		this.logger.info('Configurando file watcher...');
+		this.logger.info('Setting up file watcher...');
 		this.setupFileWatcher();
 		
-		this.logger.info('resolveWebviewView concluído');
+		this.logger.info('resolveWebviewView completed');
 	}
 
 	private async handleMessage(message: WebviewMessage): Promise<void> {
@@ -767,6 +778,277 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 
 	dispose(): void {
 		this.watcher?.dispose();
+	}
+}
+
+class TerminalViewProvider implements vscode.WebviewViewProvider {
+	public static readonly viewType = 'cickcmd.terminal';
+	private view?: vscode.WebviewView;
+	private terminals: vscode.Terminal[] = [];
+
+	constructor(
+		private readonly context: vscode.ExtensionContext,
+		private readonly logger: Logger
+	) {
+		// Listen for terminal events
+		vscode.window.onDidCloseTerminal(terminal => {
+			this.terminals = this.terminals.filter(t => t !== terminal);
+			this.updateWebviewContent();
+		});
+
+		vscode.window.onDidChangeActiveTerminal(() => {
+			this.updateWebviewContent();
+		});
+	}
+
+	resolveWebviewView(webviewView: vscode.WebviewView): void {
+		this.logger.info('resolveWebviewView called - initializing terminal view');
+		
+		this.view = webviewView;
+		const webview = webviewView.webview;
+		
+		webview.options = { 
+			enableScripts: true, 
+			localResourceRoots: [this.context.extensionUri] 
+		};
+
+		this.updateWebviewContent();
+
+		webview.onDidReceiveMessage(async (message: any) => {
+			switch (message.type) {
+				case 'createTerminal':
+					this.createNewTerminal();
+					break;
+				case 'focusTerminal':
+					if (message.name) {
+						this.focusTerminal(message.name);
+					}
+					break;
+				case 'closeTerminal':
+					if (message.name) {
+						this.closeTerminal(message.name);
+					}
+					break;
+			}
+		});
+	}
+
+	createNewTerminal(): void {
+		const terminal = vscode.window.createTerminal(`CickCMD Terminal ${this.terminals.length + 1}`);
+		this.terminals.push(terminal);
+		terminal.show();
+		this.updateWebviewContent();
+	}
+
+	private focusTerminal(name: string): void {
+		const terminal = this.terminals.find(t => t.name === name);
+		if (terminal) {
+			terminal.show();
+		}
+	}
+
+	private closeTerminal(name: string): void {
+		const terminal = this.terminals.find(t => t.name === name);
+		if (terminal) {
+			terminal.dispose();
+		}
+	}
+
+	private async updateWebviewContent(): Promise<void> {
+		if (!this.view) {
+			return;
+		}
+
+		const activeTerminal = vscode.window.activeTerminal;
+		const allTerminals = vscode.window.terminals;
+
+		this.view.webview.html = this.getHtmlContent(allTerminals, activeTerminal);
+	}
+
+	private getHtmlContent(terminals: readonly vscode.Terminal[], activeTerminal?: vscode.Terminal): string {
+		const nonce = this.getNonce();
+
+		const terminalsList = terminals.map(terminal => `
+			<div class="terminal-item ${terminal === activeTerminal ? 'active' : ''}" data-name="${this.escapeHtml(terminal.name)}">
+				<div class="terminal-info">
+					<span class="terminal-name">${this.escapeHtml(terminal.name)}</span>
+					<span class="terminal-status">${terminal === activeTerminal ? '(Active)' : ''}</span>
+				</div>
+				<div class="terminal-actions">
+					<button class="btn btn-outline" onclick="focusTerminal('${this.escapeHtml(terminal.name)}')">Focus</button>
+					<button class="btn btn-outline" onclick="closeTerminal('${this.escapeHtml(terminal.name)}')">Close</button>
+				</div>
+			</div>
+		`).join('');
+
+		return `<!DOCTYPE html>
+		<html lang="en">
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';">
+			<title>CickCMD Terminal</title>
+			${this.getTerminalWebviewStyles()}
+		</head>
+		<body>
+			<div class="container">
+				<div class="header">
+					<h2>Terminals</h2>
+					<button class="btn btn-primary" onclick="createTerminal()">New Terminal</button>
+				</div>
+				
+				<div class="terminals-list">
+					${terminalsList || '<div class="empty-state">No terminals open</div>'}
+				</div>
+			</div>
+
+			<script nonce="${nonce}">
+				const vscode = acquireVsCodeApi();
+
+				function createTerminal() {
+					vscode.postMessage({ type: 'createTerminal' });
+				}
+
+				function focusTerminal(name) {
+					vscode.postMessage({ type: 'focusTerminal', name: name });
+				}
+
+				function closeTerminal(name) {
+					vscode.postMessage({ type: 'closeTerminal', name: name });
+				}
+			</script>
+		</body>
+		</html>`;
+	}
+
+	private getTerminalWebviewStyles(): string {
+		return `<style>
+			* { box-sizing: border-box; }
+			
+			body {
+				font-family: var(--vscode-font-family);
+				font-size: var(--vscode-font-size);
+				color: var(--vscode-foreground);
+				background: var(--vscode-editor-background);
+				margin: 0;
+				padding: 0;
+			}
+
+			.container {
+				padding: 12px;
+			}
+
+			.header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 16px;
+				padding-bottom: 12px;
+				border-bottom: 1px solid var(--vscode-panel-border);
+			}
+
+			.header h2 {
+				margin: 0;
+				font-size: 16px;
+				font-weight: 600;
+			}
+
+			.btn {
+				padding: 6px 12px;
+				border: 1px solid var(--vscode-button-border);
+				border-radius: 3px;
+				font-size: 12px;
+				cursor: pointer;
+				white-space: nowrap;
+			}
+
+			.btn-primary {
+				background: var(--vscode-button-background);
+				color: var(--vscode-button-foreground);
+			}
+
+			.btn-primary:hover {
+				background: var(--vscode-button-hoverBackground);
+			}
+
+			.btn-outline {
+				background: transparent;
+				color: var(--vscode-foreground);
+				font-size: 11px;
+				padding: 4px 8px;
+			}
+
+			.btn-outline:hover {
+				background: var(--vscode-list-hoverBackground);
+			}
+
+			.terminals-list {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+			}
+
+			.terminal-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 12px;
+				border: 1px solid var(--vscode-panel-border);
+				border-radius: 4px;
+				background: var(--vscode-editor-background);
+			}
+
+			.terminal-item.active {
+				border-color: var(--vscode-focusBorder);
+				background: var(--vscode-list-activeSelectionBackground);
+			}
+
+			.terminal-info {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+
+			.terminal-name {
+				font-weight: 600;
+				font-size: 13px;
+			}
+
+			.terminal-status {
+				font-size: 11px;
+				color: var(--vscode-descriptionForeground);
+			}
+
+			.terminal-actions {
+				display: flex;
+				gap: 8px;
+			}
+
+			.empty-state {
+				text-align: center;
+				padding: 32px;
+				color: var(--vscode-descriptionForeground);
+				font-style: italic;
+			}
+		</style>`;
+	}
+
+	private escapeHtml(unsafe: string): string {
+		return unsafe
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+	}
+
+	private getNonce(): string {
+		let text = '';
+		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for (let i = 0; i < 32; i++) {
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return text;
 	}
 }
 
