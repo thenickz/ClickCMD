@@ -31,7 +31,31 @@ export function activate(context: vscode.ExtensionContext): void {
 			vscode.commands.registerCommand('clickcmds.focus', () => 
 				vscode.commands.executeCommand('workbench.view.extension.clickcmds')
 			),
-			vscode.commands.registerCommand('clickcmds.clearTemporary', () => configManager.clearTemporary())
+			vscode.commands.registerCommand('clickcmds.clearTemporary', () => configManager.clearTemporary()),
+			vscode.commands.registerCommand('clickcmds.runCommand', async (commandName?: string) => {
+				if (!commandName) {
+					// Se não passou comando, mostrar lista para escolher
+					const config = await configManager.readConfig();
+					const effective = configManager.getEffectiveConfig(config);
+					const commandNames = Object.keys(effective.commands);
+					
+					if (commandNames.length === 0) {
+						vscode.window.showWarningMessage('Nenhum comando encontrado no .cmmds');
+						return;
+					}
+					
+					const selected = await vscode.window.showQuickPick(commandNames, {
+						placeHolder: 'Selecione um comando para executar'
+					});
+					
+					if (selected) {
+						await viewProvider.runCommandByName(selected);
+					}
+				} else {
+					// Executar comando específico
+					await viewProvider.runCommandByName(commandName);
+				}
+			})
 		];
 
 		context.subscriptions.push(...commands, outputChannel);
@@ -716,6 +740,11 @@ class ClickCmdsViewProvider implements vscode.WebviewViewProvider {
 			this.logger.error(`Failed to run command ${commandName}:`, error);
 			vscode.window.showErrorMessage(`Falha ao executar comando: ${commandName}`);
 		}
+	}
+
+	// Método público para ser chamado externamente
+	async runCommandByName(commandName: string): Promise<void> {
+		await this.runCommand(commandName);
 	}
 
 	private escapeHtml(unsafe: string): string {

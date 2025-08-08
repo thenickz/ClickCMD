@@ -51,6 +51,10 @@
         "command": "clickcmds.clearTemporary",
         "title": "ClickCmds: Limpar Configurações Temporárias",
         "icon": "$(clear-all)"
+      },
+      {
+        "command": "clickcmds.runCommand",
+        "title": "ClickCmds: Executar Comando via Terminal"
       }
     ],
     "menus": {
