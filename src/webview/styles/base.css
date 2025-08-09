@@ -1,0 +1,41 @@
+/* Base styles and layout */
+* { 
+	box-sizing: border-box; 
+}
+
+body {
+	font-family: var(--vscode-font-family);
+	font-size: var(--base-font-size);
+	color: var(--vscode-foreground);
+	background: var(--vscode-editor-background);
+	margin: 0;
+	padding: 0;
+	line-height: 1.4;
+}
+
+.container {
+	padding: 8px;
+	min-width: 0;
+}
+
+.empty-state {
+	text-align: center;
+	padding: 20px 10px;
+	color: var(--vscode-descriptionForeground);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	font-size: var(--base-font-size);
+}
+
+.target-icon {
+	color: #4CAF50;
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.target-icon svg {
+	color: #4CAF50;
+}

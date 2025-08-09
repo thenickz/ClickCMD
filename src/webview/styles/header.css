@@ -1,0 +1,41 @@
+/* Header component styles */
+.header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--vscode-panel-border);
+	flex-wrap: wrap;
+}
+
+.header h2 {
+	margin: 0;
+	font-size: calc(var(--base-font-size) + 2px);
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	flex-shrink: 0;
+}
+
+.header-controls {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+	flex-shrink: 1;
+	min-width: 0;
+}
+
+.toggle-label {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	font-size: var(--base-font-size);
+	white-space: nowrap;
+}

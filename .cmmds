@@ -1,13 +1,9 @@
-commands:
-  "List Files": "ls -la"
-  "Check Git Status": "git status"
-  "Install Dependencies": "npm install"
-  "Run Tests": "npm test"
-  "Build Project": "npm run build"
-  
 settings:
-  runInCurrentTerminal: false
-
+  runInCurrentTerminal: true
+commands:
+  extension_dev:  code --extensionDevelopmentPath=c:\git\dev_custom_commands_vscode
+  compile: npm run compile
 temporary:
-  commands:
-    "List Files": "ls -la --color=always"
+  settings: {}
+  commands: {}
+ 
