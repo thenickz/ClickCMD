@@ -1,0 +1,11 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+	<title>terminal_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24</title>
+	<defs>
+		<image width="24" height="24" id="img1" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZTNlM2UzIj48cGF0aCBkPSJNNDY4LTI0MHEtOTYtNS0xNjItNzR0LTY2LTE2NnEwLTEwMCA3MC0xNzB0MTcwLTcwcTk3IDAgMTY2IDY2dDc0IDE2MmwtODQtMjVxLTEzLTU0LTU2LTg4LjVUNDgwLTY0MHEtNjYgMC0xMTMgNDd0LTQ3IDExM3EwIDU3IDM0LjUgMTAwdDg4LjUgNTZsMjUgODRaTTgyMS02MCA2NTAtMjMxIDYwMC04MCA0ODAtNDgwbDQwMCAxMjAtMTUxIDUwIDE3MSAxNzEtNzkgNzlaIi8+PC9zdmc+"/>
+		<image  width="19" height="17" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAARBAMAAADNtor0AAAAAXNSR0IB2cksfwAAAC1QTFRF4+PjAAAA4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+PjGTw+bAAAAA90Uk5T/wDuL/k2AAIDCAEEBQoJOimFdwAAAFZJREFUeJxjZBB8zwACgv8ZkZiCDFCAwiRVLZP+AxjT9QxD2MYKqALWqQdNIEweF0ndn2AFG1MTvjCwgZkPzf1ZcjqhasOEbTkhzEjbh3K7oEybAwyrAIU8InLifU17AAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+	</style>
+	<use id="left_click_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24 (1)" href="#img1" transform="matrix(1,0,0,1,1,1)"/>
+	<use id="forms_apps_script_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24" href="#img2" x="0" y="0"/>
+</svg>

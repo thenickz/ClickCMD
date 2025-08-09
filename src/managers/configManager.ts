@@ -133,15 +133,20 @@ export class ConfigManager {
 	}
 
 	async clearTemporary(): Promise<void> {
+		this.logger.info('clearTemporary() called - starting cleanup...');
 		const config = await this.readConfig();
+		
+		this.logger.info(`Before clear: temporary commands = ${Object.keys(config.temporary?.commands || {}).length}, temporary settings = ${Object.keys(config.temporary?.settings || {}).length}`);
+		
+		// Reset temporary settings completely
 		config.temporary = {
 			settings: {},
 			commands: {}
 		};
 
 		await this.writeConfig(config);
-		this.logger.info('Cleared all temporary settings');
-		vscode.window.showInformationMessage('Configurações temporárias limpas');
+		this.logger.info('Cleared all temporary settings and commands - config file updated');
+		vscode.window.showInformationMessage('All temporary overrides cleared - back to default settings');
 	}
 
 	async openConfigFile(): Promise<void> {
