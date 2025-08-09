@@ -11,7 +11,6 @@ export function activate(context: vscode.ExtensionContext): void {
 	try {
 		const configManager = new ConfigManager(logger);
 		const commandsViewProvider = new CommandsViewProvider(context, configManager, logger);
-		const terminalViewProvider = new TerminalViewProvider(context, logger);
 
 		logger.info('Registering WebviewViewProviders...');
 		
@@ -22,14 +21,7 @@ export function activate(context: vscode.ExtensionContext): void {
 			{ webviewOptions: { retainContextWhenHidden: true } }
 		);
 		
-		// Register Terminal View Provider
-		const terminalViewDisposable = vscode.window.registerWebviewViewProvider(
-			TerminalViewProvider.viewType,
-			terminalViewProvider,
-			{ webviewOptions: { retainContextWhenHidden: true } }
-		);
-		
-		context.subscriptions.push(commandsViewDisposable, terminalViewDisposable);
+		context.subscriptions.push(commandsViewDisposable);
 		logger.info('WebviewViewProviders registered successfully');
 
 		// Register commands
@@ -63,9 +55,6 @@ export function activate(context: vscode.ExtensionContext): void {
 					// Execute specific command
 					await commandsViewProvider.runCommandByName(commandName);
 				}
-			}),
-			vscode.commands.registerCommand('cickcmd.createTerminal', () => {
-				terminalViewProvider.createNewTerminal();
 			})
 		];
 

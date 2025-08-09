@@ -29,13 +29,6 @@
           "type": "webview",
           "icon": "$(play)",
           "when": "workspaceFolderCount > 0"
-        },
-        {
-          "id": "cickcmd.terminal",
-          "name": "Terminal",
-          "type": "webview",
-          "icon": "$(terminal)",
-          "when": "workspaceFolderCount > 0"
         }
       ]
     },
@@ -63,11 +56,6 @@
       {
         "command": "cickcmd.runCommand",
         "title": "CickCMD: Run Command"
-      },
-      {
-        "command": "cickcmd.createTerminal",
-        "title": "CickCMD: Create New Terminal",
-        "icon": "$(plus)"
       }
     ],
     "menus": {
@@ -86,11 +74,6 @@
           "command": "cickcmd.clearTemporary",
           "when": "view == cickcmd.commands",
           "group": "navigation@3"
-        },
-        {
-          "command": "cickcmd.createTerminal",
-          "when": "view == cickcmd.terminal",
-          "group": "navigation@1"
         }
       ],
       "commandPalette": [
