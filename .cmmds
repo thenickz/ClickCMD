@@ -1,0 +1,9 @@
+settings:
+  runInCurrentTerminal: true
+commands:
+  extension_dev:  code --extensionDevelopmentPath=c:\git\dev_custom_commands_vscode
+  compile: npm run compile
+temporary:
+  settings: {}
+  commands: {}
+ 

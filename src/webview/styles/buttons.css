@@ -1,0 +1,71 @@
+/* Button component styles */
+.btn {
+	padding: 4px 6px;
+	border: 1px solid var(--vscode-panel-border);
+	border-radius: 3px;
+	font-size: var(--base-font-size);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	transition: all 0.2s ease;
+	min-width: 0;
+	white-space: nowrap;
+}
+
+.btn-text {
+	display: inline;
+}
+
+.btn svg {
+	flex-shrink: 0;
+}
+
+.btn-primary {
+	background: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+	border-color: var(--vscode-button-background);
+}
+
+.btn-primary:hover { 
+	background: var(--vscode-button-hoverBackground); 
+}
+
+.btn-secondary {
+	background: var(--vscode-button-secondaryBackground);
+	color: var(--vscode-button-secondaryForeground);
+	border-color: var(--vscode-button-secondaryBackground);
+}
+
+.btn-secondary:hover { 
+	background: #4a4a4a; 
+}
+
+.btn-outline {
+	background: transparent;
+	color: var(--vscode-foreground);
+}
+
+.btn-outline:hover { 
+	background: var(--vscode-list-hoverBackground); 
+}
+
+.btn-toggle-active {
+	background: var(--vscode-button-background);
+	color: var(--vscode-button-foreground);
+	border-color: var(--vscode-button-background);
+}
+
+.btn-toggle-active:hover { 
+	background: var(--vscode-button-hoverBackground); 
+}
+
+.btn-toggle-inactive {
+	background: #d32f2f;
+	color: #ffffff;
+	border-color: #d32f2f;
+}
+
+.btn-toggle-inactive:hover { 
+	background: #b71c1c; 
+}

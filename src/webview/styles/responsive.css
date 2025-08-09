@@ -1,0 +1,50 @@
+/* Responsive design styles */
+
+/* Medium screens - optimize spacing */
+@media (max-width: 350px) {
+	.header {
+		gap: 6px;
+	}
+	.header-controls {
+		gap: 3px;
+	}
+}
+
+/* Hide command preview on small screens */
+@media (max-width: 300px) {
+	.command-preview {
+		display: none;
+	}
+}
+
+/* Hide button text on very small screens */
+@media (max-width: 250px) {
+	.btn-text {
+		display: none;
+	}
+	.header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 4px;
+	}
+	.header h2 {
+		font-size: var(--base-font-size);
+	}
+	.header-controls {
+		gap: 2px;
+		justify-content: center;
+	}
+	.btn {
+		padding: 3px 4px;
+		min-width: 24px;
+		justify-content: center;
+	}
+}
+
+/* Horizontal layout for edit area on larger screens */
+@media (min-width: 250px) {
+	.command-edit {
+		flex-direction: row;
+		align-items: center;
+	}
+}
